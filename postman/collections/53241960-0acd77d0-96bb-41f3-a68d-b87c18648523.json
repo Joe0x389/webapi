@@ -93,18 +93,6 @@
 			"name": "Auth",
 			"item": [],
 			"id": "53241960-12ecff10-62ff-4221-9177-11214e0d0f8f"
-		},
-		{
-			"name": "New Request",
-			"id": "53241960-e0eb0244-0b37-4615-8df7-bb5202a2263d",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
 		}
 	]
 }
