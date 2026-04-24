@@ -1,43 +1,36 @@
-//using Furion.DatabaseAccessor.AppDbContext;
-using Microsoft.EntityFrameworkCore; // ضيف الـ using دي فوق
+using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 
-//using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+// التعديل هنا: خليه يقرأ من الـ appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? "Data Source=resto.db"; // لو ملقتش في الإعدادات، دور عليه في الفولدر الرئيسي
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=Data/resto.db"));
+    options.UseSqlite(connectionString));
 
 builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder => {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    options.AddPolicy("AllowAll", b => {
+        b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
-
 var app = builder.Build();
+
+// التعديل هنا: خليه يفتح Swagger في كل الحالات عشان تعرف تجرب براحتك
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseCors("AllowAll");
+// امسح الـ HttpsRedirection لو لسه فيه مشاكل في الـ SSL على الاستضافة المجانية
+// app.UseHttpsRedirection(); 
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-
-app.UseHttpsRedirection();
-app.UseCors("AllowAll");
 app.UseAuthorization();
-
 app.MapControllers();
-app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
 app.Run();

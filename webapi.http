@@ -10,13 +10,13 @@ Accept: application/json
 POST {{webapi}}/api/Dishes
 Content-Type: application/json
 
-{
-      "Id" : 1,
-      "Name"  : "pasta", 
-      "Price" : 100, 
-      "AvailableBowls" : 20, 
-      "ImageUrl" : "", 
-      "Category" : "shit "
+{      
+    "Id" : 1,
+    "Name"  : "pasta", 
+    "Price" : 100, 
+    "AvailableBowls" : 20, 
+    "ImageUrl" : "", 
+    "Category" : "shit "
 }
 ###
 POST {{webapi}}/api/Orders/checkout
