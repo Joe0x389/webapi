@@ -50,7 +50,20 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://jooe.runasp.net/api/Dishes",
+							"protocol": "http",
+							"host": [
+								"jooe",
+								"runasp",
+								"net"
+							],
+							"path": [
+								"api",
+								"Dishes"
+							]
+						}
 					},
 					"response": []
 				},
@@ -62,7 +75,21 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://jooe.runasp.net/api/Dishes/2",
+							"protocol": "http",
+							"host": [
+								"jooe",
+								"runasp",
+								"net"
+							],
+							"path": [
+								"api",
+								"Dishes",
+								"2"
+							]
+						}
 					},
 					"response": []
 				}
