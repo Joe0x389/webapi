@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.Data;
-using webapi.Models.Dishes;
 using Microsoft.EntityFrameworkCore;
+using webapi.Models;
 [ApiController] [Route("api/[controller]")]
 public class DishesController : ControllerBase 
 {
@@ -36,7 +36,7 @@ public class DishesController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult Post([FromBody] Dishes newDish) 
+    public IActionResult Post([FromBody] Dish newDish) 
     {
         _context.Dishes.Add(newDish); // بيضيف للجدول
         _context.SaveChanges();      // سيف التعديلات في ملف الـ .db

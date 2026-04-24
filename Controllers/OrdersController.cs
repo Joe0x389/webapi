@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.Data;
-using webapi.Models.Orders;
+using webapi.Models;
 
 [ApiController] [Route("api/[controller]")]
 public class OrdersController : ControllerBase 
@@ -27,12 +27,12 @@ public class OrdersController : ControllerBase
     public IActionResult GetOrderById(int id)
     {
         var order = _context.Orders.FirstOrDefault(o => o.Id == id);
-        if (order == null) return NotFound(new { message = "الطلب مش موجود" });
+        if (order is null) return NotFound(new { message = "Order does not exist" });
         return Ok(order);
     }
     
     [HttpPost("checkout")]
-    public IActionResult Checkout([FromBody] Orders order)
+    public IActionResult Checkout([FromBody] Order order)
     {
         _context.Orders.Add(order);
         _context.SaveChanges(); 

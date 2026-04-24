@@ -1,6 +1,6 @@
-namespace webapi.Models.Orders;
+namespace webapi.Models;
 
-public class Orders
+public class Order
 {
     
         public int Id { get; set; }

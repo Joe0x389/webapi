@@ -1,6 +1,6 @@
-namespace webapi.Models.Dishes;
+namespace webapi.Models;
 
-public class Dishes
+public class Dish
 {
     
         public int Id { get; init; }

@@ -23,7 +23,7 @@ POST {{webapi}}/api/Orders/checkout
 Content-Type: application/json
 
 {
-    "Id": 1,
+    "Id": 10,
     "CustomerName" : "joo",
     "Status" : "available",
     "TotalPayment" : 99

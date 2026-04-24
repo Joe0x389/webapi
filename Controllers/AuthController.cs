@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Data; // مهم جداً عشان يشوف الـ AppDbContext
-using webapi.Models.Users;
+using webapi.Models;
 
 namespace webapi.Controllers;
 
@@ -18,12 +19,18 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] Users loginInfo)
+    public ActionResult<User> Login([FromBody] UserDto loginInfo)
     {
         // دلوقتي الـ _context بقت موجودة وتقدر تستخدمها هنا
-        var user = _context.Users.FirstOrDefault(u => u.Username == loginInfo.Username && u.Password == loginInfo.Password);
-        
-        if (user == null) return Unauthorized();
+        var user = _context.Users.FirstOrDefault(u => u.Username == loginInfo.Username);
+        if (user is null)
+            return Unauthorized();
+
+        var hasher = new PasswordHasher<User>();
+        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginInfo.Password);
+        if (result == PasswordVerificationResult.Failed)
+            return Unauthorized();
+
         return Ok(user);
     }
 }
