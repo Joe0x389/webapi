@@ -15,8 +15,30 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"mango juice\",\n  \"price\": 20.0,\n  \"availableBowls\": 30,\n  \"Category\":\"juice\",\n  \"ImageUrl\":\"iuhouhouhoi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://jooe.runasp.net/api/Dishes",
+							"protocol": "http",
+							"host": [
+								"jooe",
+								"runasp",
+								"net"
+							],
+							"path": [
+								"api",
+								"Dishes"
+							]
+						}
 					},
 					"response": []
 				},
@@ -57,8 +79,31 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerName\": \"Youssef Mostafa\",\n  \"totalPayment\": 250.75,\n  \"status\": \"Pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://jooe.runasp.net/api/orders/checkout",
+							"protocol": "http",
+							"host": [
+								"jooe",
+								"runasp",
+								"net"
+							],
+							"path": [
+								"api",
+								"orders",
+								"checkout"
+							]
+						}
 					},
 					"response": []
 				},
