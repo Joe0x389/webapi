@@ -1,4 +1,4 @@
-@webapi = http://jooe.runasp.net
+@webapi = http://localhost:5159
 
 GET {{webapi}}/weatherforecast/
 Accept: application/json
@@ -23,7 +23,7 @@ POST {{webapi}}/api/Orders/checkout
 Content-Type: application/json
 
 {
-    "Id": 1,
+    "Id": 9,
     "CustomerName" : "joo",
     "Status" : "available",
     "TotalPayment" : 99

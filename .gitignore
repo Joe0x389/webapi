@@ -1,0 +1,5 @@
+.vs
+bin/
+obj/
+Data/resto.db-shm
+Data/resto.db-wal
