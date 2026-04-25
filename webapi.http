@@ -1,9 +1,5 @@
 @webapi = http://localhost:5159
 
-GET {{webapi}}/weatherforecast/
-Accept: application/json
-
-###
 GET {{webapi}}/api/Dishes
 Accept: application/json
 ###
@@ -23,8 +19,16 @@ POST {{webapi}}/api/Orders/checkout
 Content-Type: application/json
 
 {
-    "Id": 9,
     "CustomerName" : "joo",
-    "Status" : "available",
-    "TotalPayment" : 99
+    "Items": [
+        {
+            "DishId": 1,
+            "Quantity": 2
+        }
+
+    ]
 }
+
+###
+GET {{webapi}}/api/orders/17
+Accept: application/json

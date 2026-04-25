@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 using webapi.Models;
 
@@ -17,23 +18,53 @@ public class OrdersController : ControllerBase
     public ActionResult<List<Order>> GetAllOrders()
     {
         // بيجيب كل الطلبات من الداتابيز ويحولها لـ List
-        var orders = _context.Orders.ToList();
+        var orders = _context.Orders
+            .Include(o => o.Items)
+            .ToList();
         return Ok(orders);
     }
 
 // لو عايز تجيب طلب واحد بالـ ID
 // اللينك هيكون: api/orders/5
     [HttpGet("{id}")]
-    public ActionResult<Order> GetOrderById(int id)
+    public async Task<ActionResult<Order>> GetOrderById(int id)
     {
-        var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+        var order = await _context.Orders
+            .Include(o => o.Items) // عشان يجيب تفاصيل الأيتمز مع الطلب
+            .FirstOrDefaultAsync(o => o.Id == id);
         if (order is null) return NotFound(new { message = "Order does not exist" });
         return Ok(order);
     }
     
     [HttpPost("checkout")]
-    public IActionResult Checkout([FromBody] Order order)
+    public IActionResult Checkout([FromBody] OrderDto dto)
     {
+        if (dto.Items is null || dto.Items.Count == 0)
+            return BadRequest(new { message = "Order must contain at least one item." });
+        foreach (var item in dto.Items)
+        {
+            var dish = _context.Dishes.FirstOrDefault(d => d.Id == item.DishId);
+            if (dish is null)
+                return BadRequest(new { message = $"Dish with ID {item.DishId} does not exist!" });
+            if (dish.AvailableBowls < item.Quantity)
+                return BadRequest(new { message = $"Not enough bowls available for \"{dish.Name}\"!" });
+        }
+
+        var order = new Order
+        {
+            CustomerName = dto.CustomerName,
+            Status = dto.Status ?? "Pending",
+            TotalPayment = 0m,
+            Items = dto.Items
+        };
+
+        foreach (var item in order.Items)
+        {
+            var dish = _context.Dishes.First(d => d.Id == item.DishId);
+            dish.AvailableBowls -= item.Quantity;
+            order.TotalPayment += dish.Price * item.Quantity;
+        }
+
         _context.Orders.Add(order);
         _context.SaveChanges();
         return Ok(new { OrderId = order.Id, Status = "Order saved permanently" });
