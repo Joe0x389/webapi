@@ -14,7 +14,7 @@ public class OrdersController : ControllerBase
 
     // اللينك هيكون: api/orders
     [HttpGet]
-    public IActionResult GetAllOrders()
+    public ActionResult<List<Order>> GetAllOrders()
     {
         // بيجيب كل الطلبات من الداتابيز ويحولها لـ List
         var orders = _context.Orders.ToList();
@@ -24,7 +24,7 @@ public class OrdersController : ControllerBase
 // لو عايز تجيب طلب واحد بالـ ID
 // اللينك هيكون: api/orders/5
     [HttpGet("{id}")]
-    public IActionResult GetOrderById(int id)
+    public ActionResult<Order> GetOrderById(int id)
     {
         var order = _context.Orders.FirstOrDefault(o => o.Id == id);
         if (order is null) return NotFound(new { message = "Order does not exist" });
@@ -35,7 +35,7 @@ public class OrdersController : ControllerBase
     public IActionResult Checkout([FromBody] Order order)
     {
         _context.Orders.Add(order);
-        _context.SaveChanges(); 
-        return Ok(new { OrderId = order.Id, Status = "Order Saved Permanently" });
+        _context.SaveChanges();
+        return Ok(new { OrderId = order.Id, Status = "Order saved permanently" });
     }
 }
