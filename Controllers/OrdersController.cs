@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
+using webapi.DTOs;
 using webapi.Models;
+
+namespace webapi.Controllers;
 
 [ApiController] [Route("api/[controller]")]
 public class OrdersController : ControllerBase 
@@ -27,11 +30,11 @@ public class OrdersController : ControllerBase
 // لو عايز تجيب طلب واحد بالـ ID
 // اللينك هيكون: api/orders/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Order>> GetOrderById(int id)
+    public ActionResult<Order> GetOrderById(int id)
     {
-        var order = await _context.Orders
+        var order = _context.Orders
             .Include(o => o.Items) // عشان يجيب تفاصيل الأيتمز مع الطلب
-            .FirstOrDefaultAsync(o => o.Id == id);
+            .FirstOrDefault(o => o.Id == id);
         if (order is null) return NotFound(new { message = "Order does not exist" });
         return Ok(order);
     }
@@ -46,7 +49,7 @@ public class OrdersController : ControllerBase
             var dish = _context.Dishes.FirstOrDefault(d => d.Id == item.DishId);
             if (dish is null)
                 return BadRequest(new { message = $"Dish with ID {item.DishId} does not exist!" });
-            if (dish.AvailableBowls < item.Quantity)
+            if (dish.AvailableQty < item.Quantity)
                 return BadRequest(new { message = $"Not enough bowls available for \"{dish.Name}\"!" });
         }
 
@@ -61,7 +64,7 @@ public class OrdersController : ControllerBase
         foreach (var item in order.Items)
         {
             var dish = _context.Dishes.First(d => d.Id == item.DishId);
-            dish.AvailableBowls -= item.Quantity;
+            dish.AvailableQty -= item.Quantity;
             order.TotalPayment += dish.Price * item.Quantity;
         }
 

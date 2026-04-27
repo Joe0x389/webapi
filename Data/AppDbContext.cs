@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using webapi.Models;
 
 namespace webapi.Data;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -9,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,5 +23,16 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Order>()
             .Property(o => o.TotalPayment)
             .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Dish>()
+            .HasMany(d => d.Categories)
+            .WithMany(c => c.Dishes)
+            .UsingEntity<Dictionary<string, object>>(
+                "DishCategories",
+                j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
+                j => j.HasOne<Dish>().WithMany().HasForeignKey("DishId")
+    );
+
+
     }
 }

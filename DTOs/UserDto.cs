@@ -1,4 +1,4 @@
-﻿namespace webapi.Models;
+﻿namespace webapi.DTOs;
 
 public class UserDto
 {

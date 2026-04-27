@@ -1,4 +1,5 @@
-﻿namespace webapi.Models;
+﻿using webapi.Models;
+namespace webapi.DTOs;
 
 public class OrderDto
 {

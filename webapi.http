@@ -6,13 +6,12 @@ Accept: application/json
 POST {{webapi}}/api/Dishes
 Content-Type: application/json
 
-{      
-    "Id" : 1,
-    "Name"  : "pasta", 
+{
+    "Name"  : "Pepperoni Pizza", 
     "Price" : 100, 
-    "AvailableBowls" : 20, 
+    "AvailableQty" : 20, 
     "ImageUrl" : "", 
-    "Category" : "shit "
+    "CategoryIds" : [1, 2]
 }
 ###
 POST {{webapi}}/api/Orders/checkout
@@ -30,5 +29,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{webapi}}/api/orders/17
+GET {{webapi}}/api/orders/19
 Accept: application/json
+###
+GET {{webapi}}/api/categories
+Accept: application/json
+###
+GET {{webapi}}/api/categories/2
+Accept: application/json
+###
+POST {{webapi}}/api/categories/Dessert
