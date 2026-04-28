@@ -1,30 +1,61 @@
 @webapi = http://localhost:5159
+@token = your_token_here
 
-GET {{webapi}}/weatherforecast/
-Accept: application/json
-
-###
-GET {{webapi}}/api/Dishes
+GET {{webapi}}/api/dishes
 Accept: application/json
 ###
-POST {{webapi}}/api/Dishes
-Content-Type: application/json
-
-{      
-    "Id" : 1,
-    "Name"  : "pasta", 
-    "Price" : 100, 
-    "AvailableBowls" : 20, 
-    "ImageUrl" : "", 
-    "Category" : "shit "
-}
+GET {{webapi}}/api/dishes?categoryId=2
+Accept: application/json
 ###
-POST {{webapi}}/api/Orders/checkout
+POST {{webapi}}/api/dishes
 Content-Type: application/json
 
 {
-    "Id": 9,
+    "Name"  : "Pepperoni Pizza", 
+    "Price" : 100, 
+    "AvailableQty" : 20, 
+    "ImageUrl" : "", 
+    "CategoryIds" : [1, 2]
+}
+###
+POST {{webapi}}/api/orders/checkout
+Content-Type: application/json
+
+{
     "CustomerName" : "joo",
-    "Status" : "available",
-    "TotalPayment" : 99
+    "Items": [
+        {
+            "DishId": 1,
+            "Quantity": 2
+        }
+
+    ]
+}
+
+###
+GET {{webapi}}/api/orders/1
+Accept: application/json
+###
+GET {{webapi}}/api/categories
+Accept: application/json
+###
+GET {{webapi}}/api/categories/2
+Accept: application/json
+###
+POST {{webapi}}/api/categories/Drinks
+Authorization: Bearer {{token}}
+###
+POST {{webapi}}/api/auth/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{
+    "Username": "newuser",
+    "Password": "cashierpassword"
+}
+###
+POST {{webapi}}/api/auth/login
+Content-Type: application/json
+{
+    "Username": "AdminUser",
+    "Password": "adminpassword"
 }
