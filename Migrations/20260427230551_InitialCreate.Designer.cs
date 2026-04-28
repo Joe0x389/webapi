@@ -11,7 +11,7 @@ using webapi.Data;
 namespace webapi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260427145818_InitialCreate")]
+    [Migration("20260427230551_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace webapi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AvailableBowls")
+                    b.Property<int>("AvailableQty")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageUrl")

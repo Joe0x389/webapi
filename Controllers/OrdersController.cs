@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
@@ -6,7 +7,9 @@ using webapi.Models;
 
 namespace webapi.Controllers;
 
-[ApiController] [Route("api/[controller]")]
+[ApiController]
+[Authorize]
+[Route("api/[controller]")]
 public class OrdersController : ControllerBase 
 {
     private readonly AppDbContext _context;
@@ -35,18 +38,20 @@ public class OrdersController : ControllerBase
         var order = _context.Orders
             .Include(o => o.Items) // عشان يجيب تفاصيل الأيتمز مع الطلب
             .FirstOrDefault(o => o.Id == id);
-        if (order is null) return NotFound(new { message = "Order does not exist" });
+        if (order is null)
+            return NotFound(new { message = "Order does not exist" });
         return Ok(order);
     }
     
     [HttpPost("checkout")]
+    [Authorize]
     public IActionResult Checkout([FromBody] OrderDto dto)
     {
         if (dto.Items is null || dto.Items.Count == 0)
             return BadRequest(new { message = "Order must contain at least one item." });
         foreach (var item in dto.Items)
         {
-            var dish = _context.Dishes.FirstOrDefault(d => d.Id == item.DishId);
+            var dish = _context.Dishes.Find(item.DishId);
             if (dish is null)
                 return BadRequest(new { message = $"Dish with ID {item.DishId} does not exist!" });
             if (dish.AvailableQty < item.Quantity)

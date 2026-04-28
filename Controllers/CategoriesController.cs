@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 using webapi.DTOs;
@@ -29,13 +30,16 @@ public class CategoriesController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Category> GetById(int id)
     {
-        var category = _context.Categories.Include(c => c.Dishes).FirstOrDefault(c => c.Id == id);
+        var category = _context.Categories
+            .Include(c => c.Dishes)
+            .FirstOrDefault(c => c.Id == id);
         if (category is null)
             return NotFound(new { Message = "Category not found!" });
         return Ok(category);
     }
 
     [HttpPost("{name}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Post(string name)
     {
         if (_context.Categories.Any(c => c.Name == name))

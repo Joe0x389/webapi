@@ -2,7 +2,7 @@
 
 namespace webapi.DTOs;
 
-public class GetDishDto
+public class DishGetDto
 {
     public int Id { get; init; }
     public required string Name { get; set; }
@@ -11,7 +11,7 @@ public class GetDishDto
     public string ImageUrl { get; set; } = string.Empty;
     public List<CategorySummaryDto> Categories { get; set; } = [];
 
-    public static GetDishDto FromDish(Dish dish) => new()
+    public static DishGetDto FromDish(Dish dish) => new()
     {
         Id = dish.Id,
         Name = dish.Name,

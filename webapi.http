@@ -1,9 +1,14 @@
 @webapi = http://localhost:5159
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc3NzMzOTAwMywiZXhwIjoxNzc3NDI1NDAzLCJpYXQiOjE3NzczMzkwMDN9.ZaG3aZBjU0jrKHysyoisetIqO_ZwS3OKnJ0iVByFDG0
+@cToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkNhc2hpZXJVc2VyIiwicm9sZSI6IkNhc2hpZXIiLCJuYmYiOjE3NzczOTMyNjYsImV4cCI6MTc3NzQ3OTY2NiwiaWF0IjoxNzc3MzkzMjY2fQ.sUe7DNVYJOpIbyAdW6BmWTVxC4PmlkK11zIWPGyp9qQ
 
-GET {{webapi}}/api/Dishes
+GET {{webapi}}/api/dishes
 Accept: application/json
 ###
-POST {{webapi}}/api/Dishes
+GET {{webapi}}/api/dishes?categoryId=2
+Accept: application/json
+###
+POST {{webapi}}/api/dishes
 Content-Type: application/json
 
 {
@@ -14,7 +19,7 @@ Content-Type: application/json
     "CategoryIds" : [1, 2]
 }
 ###
-POST {{webapi}}/api/Orders/checkout
+POST {{webapi}}/api/orders/checkout
 Content-Type: application/json
 
 {
@@ -29,7 +34,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{webapi}}/api/orders/19
+GET {{webapi}}/api/orders/1
 Accept: application/json
 ###
 GET {{webapi}}/api/categories
@@ -38,4 +43,20 @@ Accept: application/json
 GET {{webapi}}/api/categories/2
 Accept: application/json
 ###
-POST {{webapi}}/api/categories/Dessert
+POST {{webapi}}/api/categories/Drinks
+Authorization: Bearer {{token}}
+###
+POST {{webapi}}/api/auth/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{
+    "Username": "CashierUser",
+    "Password": "cashierpassword"
+}
+###
+POST {{webapi}}/api/auth/login
+Content-Type: application/json
+{
+    "Username": "CashierUser",
+    "Password": "cashierpassword"
+}

@@ -53,7 +53,7 @@ namespace webapi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AvailableBowls")
+                    b.Property<int>("AvailableQty")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageUrl")

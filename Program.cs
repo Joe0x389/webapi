@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using webapi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +24,34 @@ builder.Services.AddCors(options => {
     });
 });
 
+var jwtKey = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 32)
+{
+    throw new Exception("JWT Key is missing or too short! It must be at least 32 characters.");
+}
+
+var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true
+    };
+});
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // التعديل هنا: خليه يفتح Swagger في كل الحالات عشان تعرف تجرب براحتك
@@ -28,9 +60,10 @@ app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
 // امسح الـ HttpsRedirection لو لسه فيه مشاكل في الـ SSL على الاستضافة المجانية
-// app.UseHttpsRedirection(); 
+// app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication(); // Who are you?
+app.UseAuthorization();  // What are you allowed to do?
 app.MapControllers();
 
 app.Run();

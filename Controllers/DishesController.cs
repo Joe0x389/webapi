@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
@@ -18,13 +19,18 @@ public class DishesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<GetDishDto>> Get() => Ok(_context.Dishes
-        .Include(d => d.Categories)
-        .Select(d => GetDishDto.FromDish(d))
-        .ToList());
+    public ActionResult<List<DishGetDto>> GetWithCategory(int? categoryId)
+    {
+        var dishes = _context.Dishes
+            .Include(d => d.Categories)
+            .Where(d => !categoryId.HasValue || d.Categories.Any(c => c.Id == categoryId))
+            .Select(d => DishGetDto.FromDish(d))
+            .ToList();
+        return Ok(dishes);
+    }
 
     [HttpGet("{id}")]
-    public ActionResult<GetDishDto> GetDishById(int id)
+    public ActionResult<DishGetDto> GetDishById(int id)
     {
         var dish = _context.Dishes.Find(id);
 
@@ -36,11 +42,12 @@ public class DishesController : ControllerBase
         }
 
         // 4. لو موجود رجع بيانات الطبق
-        return Ok(GetDishDto.FromDish(dish));
+        return Ok(DishGetDto.FromDish(dish));
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] CreateDishDto dto)
+    [Authorize(Roles = "Admin")]
+    public IActionResult Post([FromBody] DishCreateDto dto)
     {
         if (dto.AvailableQty < 0) // بنشيك لو عدد الأطباق المتاحة أقل من صفر
             return BadRequest(new { Message = "Available bowls cannot be negative!" });
@@ -58,17 +65,31 @@ public class DishesController : ControllerBase
         {
             Name = dto.Name,
             Price = dto.Price,
-            AvailableQty = dto.AvailableQty
+            AvailableQty = dto.AvailableQty,
+            Categories = [.. dto.CategoryIds.Select(id => _context.Categories.Find(id)!)]
         };
-
-        foreach (var id in dto.CategoryIds)
-        {
-            var category = _context.Categories.Find(id)!;
-            dish.Categories.Add(category); // بنضيف الكاتيجوري للطبق
-        }
 
         _context.Dishes.Add(dish); // بيضيف للجدول
         _context.SaveChanges();      // سيف التعديلات في ملف الـ .db
         return Ok(new { Message = "Dish saved to DB!" });
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Update(int id, [FromBody] DishUpdateDto dto)
+    {
+        var dish = _context.Dishes.Find(id);
+        if (dish is null)
+            return NotFound(new { Message = "Dish does not exist!" });
+        if (dto.AvailableQty < 0)
+            return BadRequest(new { Message = "Available quantity cannot be negative!" });
+        if (dto.Price < 0)
+            return BadRequest(new { Message = "Price cannot be negative!" });
+        if (_context.Dishes.Any(d => d.Name == dto.Name && d.Id != id))
+            return BadRequest(new { Message = "Dish with the same name already exists!" });
+
+        Helpers.Patch(dto, dish);
+        _context.SaveChanges();
+        return Ok(new { Message = "Dish updated successfully!" });
     }
 }

@@ -32,7 +32,7 @@ namespace webapi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    AvailableBowls = table.Column<int>(type: "INTEGER", nullable: false),
+                    AvailableQty = table.Column<int>(type: "INTEGER", nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

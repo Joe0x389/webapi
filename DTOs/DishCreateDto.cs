@@ -1,6 +1,6 @@
 ﻿namespace webapi.DTOs;
 
-public class CreateDishDto
+public class DishCreateDto
 {
     public required string Name { get; set; }
     public decimal Price { get; set; }
