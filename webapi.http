@@ -1,6 +1,5 @@
 @webapi = http://localhost:5159
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc3NzMzOTAwMywiZXhwIjoxNzc3NDI1NDAzLCJpYXQiOjE3NzczMzkwMDN9.ZaG3aZBjU0jrKHysyoisetIqO_ZwS3OKnJ0iVByFDG0
-@cToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkNhc2hpZXJVc2VyIiwicm9sZSI6IkNhc2hpZXIiLCJuYmYiOjE3NzczOTMyNjYsImV4cCI6MTc3NzQ3OTY2NiwiaWF0IjoxNzc3MzkzMjY2fQ.sUe7DNVYJOpIbyAdW6BmWTVxC4PmlkK11zIWPGyp9qQ
+@token = your_token_here
 
 GET {{webapi}}/api/dishes
 Accept: application/json
@@ -50,13 +49,13 @@ POST {{webapi}}/api/auth/register
 Authorization: Bearer {{token}}
 Content-Type: application/json
 {
-    "Username": "CashierUser",
+    "Username": "newuser",
     "Password": "cashierpassword"
 }
 ###
 POST {{webapi}}/api/auth/login
 Content-Type: application/json
 {
-    "Username": "CashierUser",
-    "Password": "cashierpassword"
+    "Username": "AdminUser",
+    "Password": "adminpassword"
 }

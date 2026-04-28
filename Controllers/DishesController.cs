@@ -81,14 +81,37 @@ public class DishesController : ControllerBase
         var dish = _context.Dishes.Find(id);
         if (dish is null)
             return NotFound(new { Message = "Dish does not exist!" });
-        if (dto.AvailableQty < 0)
+
+        var qty = dto.AvailableQty;
+        if (qty is not null and < 0)
             return BadRequest(new { Message = "Available quantity cannot be negative!" });
-        if (dto.Price < 0)
-            return BadRequest(new { Message = "Price cannot be negative!" });
-        if (_context.Dishes.Any(d => d.Name == dto.Name && d.Id != id))
+
+        var price = dto.Price;
+        if (price is not null and <= 0)
+            return BadRequest(new { Message = "Price must be positive!" });
+
+        var name = dto.Name;
+        if (name != null && _context.Dishes.Any(d => d.Name == name && d.Id != id))
             return BadRequest(new { Message = "Dish with the same name already exists!" });
 
-        Helpers.Patch(dto, dish);
+        var catList = new List<Category>();
+        var catIds = dto.CategoryIds;
+        if (catIds is not null)
+        {
+            foreach (var catId in catIds)
+            {
+                var category = _context.Categories.Find(catId);
+                if (category is null)
+                    return BadRequest(new { Message = $"Category with ID {catId} does not exist!" });
+                catList.Add(category);
+            }
+        }
+
+        if (name is not null) dish.Name = name;
+        if (qty is not null) dish.AvailableQty = qty.Value;
+        if (price is not null) dish.Price = price.Value;
+        if (catList.Count > 0) dish.Categories = catList;
+
         _context.SaveChanges();
         return Ok(new { Message = "Dish updated successfully!" });
     }

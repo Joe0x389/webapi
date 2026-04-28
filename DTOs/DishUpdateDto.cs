@@ -2,10 +2,11 @@
 
 namespace webapi.DTOs;
 
-public record DishUpdateDto(
+public record DishUpdateDto
+(
     string? Name,
     decimal? Price,
     int? AvailableQty,
     string? ImageUrl,
     int[]? CategoryIds
-    );
+);

@@ -15,11 +15,9 @@ namespace webapi.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    // 1. تعريف المتغير
     private readonly AppDbContext _context;
     private readonly IConfiguration _configuration;
 
-    // 2. الـ Constructor اللي بيخلي الـ _context موجودة
     public AuthController(AppDbContext context, IConfiguration configuration)
     {
         _context = context;
@@ -27,9 +25,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public ActionResult<User> Login([FromBody] UserDto loginInfo)
+    public IActionResult Login([FromBody] UserDto loginInfo)
     {
-        // دلوقتي الـ _context بقت موجودة وتقدر تستخدمها هنا
         var user = _context.Users.FirstOrDefault(u => u.Username == loginInfo.Username);
         if (user is null)
             return Unauthorized();
@@ -46,9 +43,10 @@ public class AuthController : ControllerBase
             Subject = new ClaimsIdentity(
             [
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             ]),
-            Expires = DateTime.UtcNow.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(1), // Token valid for 1 day
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -57,7 +55,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")] // لو عايز بس الأدمين يقدر يسجل مستخدمين جدد
+    [Authorize(Roles = "Admin")]
     public ActionResult<User> Register([FromBody] UserCreateDto registerInfo)
     {
         if (_context.Users.Any(u => u.Username == registerInfo.Username))
@@ -78,7 +76,7 @@ public class AuthController : ControllerBase
     [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Id == id);
+        var user = _context.Users.Find(id);
         if (user is null)
             return NotFound(new { Message = "User does not exist!" });
         _context.Users.Remove(user);
@@ -93,14 +91,17 @@ public class AuthController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.Id == id);
         if (user is null)
             return NotFound(new { Message = "User does not exist!" });
-        if (!string.IsNullOrEmpty(updateInfo.Username))
+        if (_context.Users.Any(u => u.Username == updateInfo.Username && u.Id != id))
+            return BadRequest(new { Message = "Username already exists!" });
+        if (!string.IsNullOrWhiteSpace(updateInfo.Username))
             user.Username = updateInfo.Username;
-        if (!string.IsNullOrEmpty(updateInfo.Password))
+        if (!string.IsNullOrWhiteSpace(updateInfo.Password))
         {
             var hasher = new PasswordHasher<User>();
             user.PasswordHash = hasher.HashPassword(user, updateInfo.Password);
         }
-        if (!string.IsNullOrEmpty(updateInfo.Role))
+        if (!string.IsNullOrWhiteSpace(updateInfo.Role)
+            && updateInfo.Role is "Admin" or "Cashier")
             user.Role = updateInfo.Role;
         _context.Users.Update(user);
         _context.SaveChanges();

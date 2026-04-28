@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using webapi.Data;
 using webapi.DTOs;
 using webapi.Models;
@@ -63,7 +64,8 @@ public class OrdersController : ControllerBase
             CustomerName = dto.CustomerName,
             Status = dto.Status ?? "Pending",
             TotalPayment = 0m,
-            Items = dto.Items
+            Items = dto.Items,
+            UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value)
         };
 
         foreach (var item in order.Items)
