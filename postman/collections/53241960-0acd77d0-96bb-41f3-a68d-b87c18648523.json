@@ -191,7 +191,20 @@
 		},
 		{
 			"name": "Auth",
-			"item": [],
+			"item": [
+				{
+					"name": "GetAllUsers",
+					"id": "53241960-a349a067-c1eb-45f0-b2ec-c347af7d7a4f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
 			"id": "53241960-12ecff10-62ff-4221-9177-11214e0d0f8f"
 		}
 	]
