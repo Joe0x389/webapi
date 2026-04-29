@@ -8,5 +8,5 @@ public record DishUpdateDto
     decimal? Price,
     int? AvailableQty,
     string? ImageUrl,
-    int[]? CategoryIds
+    int? CategoryId
 );

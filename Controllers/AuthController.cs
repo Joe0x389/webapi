@@ -24,6 +24,24 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public ActionResult<List<User>> GetAllUsers()
+    {
+        var users = _context.Users.ToList();
+        return Ok(users);
+    }
+
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
+    public ActionResult<User> GetUserById(int id)
+    {
+        var user = _context.Users.Find(id);
+        if (user is null)
+            return NotFound(new ApiResponse("User does not exist!"));
+        return Ok(user);
+    }
+
     [HttpPost("login")]
     public IActionResult Login([FromBody] UserDto loginInfo)
     {
@@ -59,7 +77,9 @@ public class AuthController : ControllerBase
     public ActionResult<User> Register([FromBody] UserCreateDto registerInfo)
     {
         if (_context.Users.Any(u => u.Username == registerInfo.Username))
-            return BadRequest(new { Message = "Username already exists!" });
+            return BadRequest(new ApiResponse("Username already exists!"));
+        if (!Models.User.IsValidRole(registerInfo.Role))
+            return BadRequest(new ApiResponse("Invalid role! Role must be either 'Admin' or 'Cashier'."));
         var hasher = new PasswordHasher<User>();
         var user = new User
         {
@@ -74,25 +94,25 @@ public class AuthController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public IActionResult Delete(int id)
+    public ActionResult<ApiResponse> Delete(int id)
     {
         var user = _context.Users.Find(id);
         if (user is null)
-            return NotFound(new { Message = "User does not exist!" });
+            return NotFound(new ApiResponse("User does not exist!"));
         _context.Users.Remove(user);
         _context.SaveChanges();
-        return Ok(new { Message = "User deleted successfully!" });
+        return Ok(new ApiResponse("User deleted successfully!"));
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public IActionResult Update(int id, [FromBody] UserUpdateDto updateInfo)
+    public ActionResult<ApiResponse> Update(int id, [FromBody] UserUpdateDto updateInfo)
     {
         var user = _context.Users.FirstOrDefault(u => u.Id == id);
         if (user is null)
-            return NotFound(new { Message = "User does not exist!" });
+            return NotFound(new ApiResponse("User does not exist!"));
         if (_context.Users.Any(u => u.Username == updateInfo.Username && u.Id != id))
-            return BadRequest(new { Message = "Username already exists!" });
+            return BadRequest(new ApiResponse("Username already exists!"));
         if (!string.IsNullOrWhiteSpace(updateInfo.Username))
             user.Username = updateInfo.Username;
         if (!string.IsNullOrWhiteSpace(updateInfo.Password))
@@ -105,6 +125,6 @@ public class AuthController : ControllerBase
             user.Role = updateInfo.Role;
         _context.Users.Update(user);
         _context.SaveChanges();
-        return Ok(new { Message = "User updated successfully!" });
+        return Ok(new ApiResponse("User updated successfully!"));
     }
 }
