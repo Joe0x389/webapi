@@ -1,3 +1,5 @@
+using System.Net.NetworkInformation;
+
 namespace webapi.Models;
 
 public class Order
@@ -9,4 +11,7 @@ public class Order
     public decimal TotalPayment { get; set; } = 0m;
     public DateTime Date { get; set; } = DateTime.Now;
     public int UserId { get; set; }
+
+    public static bool IsValidStatus(string status)
+        => status is "Pending" or "In Progress" or "Completed";
 }

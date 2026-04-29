@@ -11,29 +11,14 @@ using webapi.Data;
 namespace webapi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260427230551_InitialCreate")]
+    [Migration("20260429135231_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
-
-            modelBuilder.Entity("DishCategories", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DishId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("CategoryId", "DishId");
-
-                    b.HasIndex("DishId");
-
-                    b.ToTable("DishCategories");
-                });
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.26");
 
             modelBuilder.Entity("webapi.Models.Category", b =>
                 {
@@ -59,6 +44,9 @@ namespace webapi.Migrations
                     b.Property<int>("AvailableQty")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -71,6 +59,8 @@ namespace webapi.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Dishes");
                 });
@@ -95,6 +85,9 @@ namespace webapi.Migrations
                     b.Property<decimal>("TotalPayment")
                         .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -149,19 +142,15 @@ namespace webapi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DishCategories", b =>
+            modelBuilder.Entity("webapi.Models.Dish", b =>
                 {
-                    b.HasOne("webapi.Models.Category", null)
-                        .WithMany()
+                    b.HasOne("webapi.Models.Category", "Category")
+                        .WithMany("Dishes")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("webapi.Models.Dish", null)
-                        .WithMany()
-                        .HasForeignKey("DishId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("webapi.Models.OrderItem", b =>
@@ -173,6 +162,11 @@ namespace webapi.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("webapi.Models.Category", b =>
+                {
+                    b.Navigation("Dishes");
                 });
 
             modelBuilder.Entity("webapi.Models.Order", b =>

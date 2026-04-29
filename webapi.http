@@ -1,5 +1,6 @@
 @webapi = http://localhost:5159
-@token = your_token_here
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc0NzE5NzAsImV4cCI6MTc3NzU1ODM3MCwiaWF0IjoxNzc3NDcxOTcwfQ.OK0Xkw0-naWIFRTRhiKcLffdzG8rtIlE2uQNY2ly8U0
+@cToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkNhc2hpZXJVc2VyIiwicm9sZSI6IkNhc2hpZXIiLCJuYW1laWQiOiIyIiwibmJmIjoxNzc3NDcyMTM2LCJleHAiOjE3Nzc1NTg1MzYsImlhdCI6MTc3NzQ3MjEzNn0.fdfrO9M5WG5yO6EhXprJ2p9os3c7hgar-6VKSPAOi7c
 
 GET {{webapi}}/api/dishes
 Accept: application/json
@@ -8,17 +9,18 @@ GET {{webapi}}/api/dishes?categoryId=2
 Accept: application/json
 ###
 POST {{webapi}}/api/dishes
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "Name"  : "Pepperoni Pizza", 
-    "Price" : 100, 
-    "AvailableQty" : 20, 
-    "ImageUrl" : "", 
-    "CategoryIds" : [1, 2]
+    "Name": "Pepperoni Pizza", 
+    "Price": 100, 
+    "AvailableQty": 20,
+    "CategoryId": 2
 }
 ###
 POST {{webapi}}/api/orders/checkout
+Authorization: Bearer {{cToken}}
 Content-Type: application/json
 
 {
@@ -34,6 +36,12 @@ Content-Type: application/json
 
 ###
 GET {{webapi}}/api/orders/1
+Authorization: Bearer {{token}}
+Accept: application/json
+###
+
+POST {{webapi}}/api/orders/1?newStatus=Completed
+Authorization: Bearer {{cToken}}
 Accept: application/json
 ###
 GET {{webapi}}/api/categories
@@ -42,20 +50,26 @@ Accept: application/json
 GET {{webapi}}/api/categories/2
 Accept: application/json
 ###
-POST {{webapi}}/api/categories/Drinks
+POST {{webapi}}/api/categories/Pizza
 Authorization: Bearer {{token}}
 ###
 POST {{webapi}}/api/auth/register
 Authorization: Bearer {{token}}
 Content-Type: application/json
+
 {
-    "Username": "newuser",
+    "Username": "CashierUser",
     "Password": "cashierpassword"
 }
 ###
 POST {{webapi}}/api/auth/login
 Content-Type: application/json
+
 {
     "Username": "AdminUser",
     "Password": "adminpassword"
 }
+###
+GET {{webapi}}/api/auth
+Authorization: Bearer {{token}}
+Content-Type: application/json

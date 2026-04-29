@@ -24,15 +24,10 @@ public class AppDbContext : DbContext
             .Property(o => o.TotalPayment)
             .HasPrecision(18, 2);
 
-        modelBuilder.Entity<Dish>()
-            .HasMany(d => d.Categories)
-            .WithMany(c => c.Dishes)
-            .UsingEntity<Dictionary<string, object>>(
-                "DishCategories",
-                j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
-                j => j.HasOne<Dish>().WithMany().HasForeignKey("DishId")
-    );
-
-
+        modelBuilder.Entity<Category>()
+            .HasMany(c => c.Dishes)
+            .WithOne(d => d.Category)
+            .HasForeignKey(d => d.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

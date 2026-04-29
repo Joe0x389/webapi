@@ -19,34 +19,30 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<CategorySummaryDto>> Get()
+    public ActionResult<List<Category>> GetAll()
     {
-        var categories = _context.Categories
-            .Select(c => new CategorySummaryDto(c.Id, c.Name))
-            .ToList();
+        var categories = _context.Categories.ToList();
         return Ok(categories);
     }
 
     [HttpGet("{id}")]
     public ActionResult<Category> GetById(int id)
     {
-        var category = _context.Categories
-            .Include(c => c.Dishes)
-            .FirstOrDefault(c => c.Id == id);
+        var category = _context.Categories.Find(id);
         if (category is null)
-            return NotFound(new { Message = "Category not found!" });
+            return NotFound(new ApiResponse("Category not found!"));
         return Ok(category);
     }
 
     [HttpPost("{name}")]
     [Authorize(Roles = "Admin")]
-    public IActionResult Post(string name)
+    public ActionResult<ApiResponse> Post(string name)
     {
         if (_context.Categories.Any(c => c.Name == name))
-            return BadRequest(new { Message = "Category with the same name already exists!" });
+            return BadRequest(new ApiResponse("Category with the same name already exists!"));
         var category = new Category { Name = name };
         _context.Categories.Add(category);
         _context.SaveChanges();
-        return Ok(new { Message = "Category saved to DB!" });
+        return Ok(new ApiResponse("Category saved to DB!"));
     }
 }
