@@ -1,5 +1,5 @@
 @webapi = http://localhost:5159
-@token = your-token-here
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc1MjAzMTcsImV4cCI6MTc3NzYwNjcxNywiaWF0IjoxNzc3NTIwMzE3fQ.mPzbcPSpw6S7w31UhsThplRKq4jbx-Z-4eX7zBpNCDE
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
@@ -107,11 +107,13 @@ Content-Type: application/json
 
 
 ### Delete a user by ID (requires admin token)
+### Cannot delete user with ID 1 (admin user), but you can delete other users
 DELETE {{webapi}}/api/users/2
 Authorization: Bearer {{token}}
 
 
 ### Update a user (requires admin token)
+### Cannot update user with ID 1 (admin user), but you can update other users
 ### You can just include the fields you want to update, but here we will update all fields for demonstration
 PUT {{webapi}}/api/users/1
 Authorization: Bearer {{token}}
