@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 @webapi = http://localhost:5159
 @token = your-token-here
-=======
-@webapi = http://localhost:5093
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc0NzE5NzAsImV4cCI6MTc3NzU1ODM3MCwiaWF0IjoxNzc3NDcxOTcwfQ.OK0Xkw0-naWIFRTRhiKcLffdzG8rtIlE2uQNY2ly8U0
-@cToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkNhc2hpZXJVc2VyIiwicm9sZSI6IkNhc2hpZXIiLCJuYW1laWQiOiIyIiwibmJmIjoxNzc3NDcyMTM2LCJleHAiOjE3Nzc1NTg1MzYsImlhdCI6MTc3NzQ3MjEzNn0.fdfrO9M5WG5yO6EhXprJ2p9os3c7hgar-6VKSPAOi7c
->>>>>>> 8e238a69b37f464545ddf535e86ac795c67405a7
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
