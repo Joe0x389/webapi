@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using webapi.Data; // مهم جداً عشان يشوف الـ AppDbContext
 using webapi.DTOs;
 using webapi.Models;
 
@@ -22,24 +21,6 @@ public class AuthController : ControllerBase
     {
         _context = context;
         _configuration = configuration;
-    }
-
-    [HttpGet]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<List<User>> GetAllUsers()
-    {
-        var users = _context.Users.ToList();
-        return Ok(users);
-    }
-
-    [HttpGet("{id}")]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<User> GetUserById(int id)
-    {
-        var user = _context.Users.Find(id);
-        if (user is null)
-            return NotFound(new ApiResponse("User does not exist!"));
-        return Ok(user);
     }
 
     [HttpPost("login")]
@@ -90,41 +71,5 @@ public class AuthController : ControllerBase
         _context.Users.Add(user);
         _context.SaveChanges();
         return Ok(user);
-    }
-
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<ApiResponse> Delete(int id)
-    {
-        var user = _context.Users.Find(id);
-        if (user is null)
-            return NotFound(new ApiResponse("User does not exist!"));
-        _context.Users.Remove(user);
-        _context.SaveChanges();
-        return Ok(new ApiResponse("User deleted successfully!"));
-    }
-
-    [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<ApiResponse> Update(int id, [FromBody] UserUpdateDto updateInfo)
-    {
-        var user = _context.Users.FirstOrDefault(u => u.Id == id);
-        if (user is null)
-            return NotFound(new ApiResponse("User does not exist!"));
-        if (_context.Users.Any(u => u.Username == updateInfo.Username && u.Id != id))
-            return BadRequest(new ApiResponse("Username already exists!"));
-        if (!string.IsNullOrWhiteSpace(updateInfo.Username))
-            user.Username = updateInfo.Username;
-        if (!string.IsNullOrWhiteSpace(updateInfo.Password))
-        {
-            var hasher = new PasswordHasher<User>();
-            user.PasswordHash = hasher.HashPassword(user, updateInfo.Password);
-        }
-        if (!string.IsNullOrWhiteSpace(updateInfo.Role)
-            && updateInfo.Role is "Admin" or "Cashier")
-            user.Role = updateInfo.Role;
-        _context.Users.Update(user);
-        _context.SaveChanges();
-        return Ok(new ApiResponse("User updated successfully!"));
     }
 }

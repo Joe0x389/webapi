@@ -2,11 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using webapi.Data;
 using webapi.DTOs;
 using webapi.Models;
-using webapi;
-using Microsoft.JSInterop.Infrastructure;
 
 namespace webapi.Controllers;
 
@@ -49,7 +46,6 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("checkout")]
-    [Authorize]
     public async Task<IActionResult> Checkout([FromBody] OrderDto dto)
     {
         if (dto.Items is null || dto.Items.Count == 0)
