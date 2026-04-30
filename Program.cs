@@ -26,7 +26,7 @@ builder.Services.AddCors(options => {
     });
 });
 
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtKey = builder.Configuration["JwtSettings:Key"];
 
 if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 32)
 {

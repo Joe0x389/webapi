@@ -1,5 +1,5 @@
 @webapi = http://localhost:5159
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc1MjAzMTcsImV4cCI6MTc3NzYwNjcxNywiaWF0IjoxNzc3NTIwMzE3fQ.mPzbcPSpw6S7w31UhsThplRKq4jbx-Z-4eX7zBpNCDE
+@token = your-token-here
 
 ### Get all dishes
 GET {{webapi}}/api/dishes

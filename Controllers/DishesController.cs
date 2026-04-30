@@ -20,8 +20,14 @@ public class DishesController : ControllerBase
     [HttpGet]
     public ActionResult<List<Dish>> GetWithCategory(int? categoryId)
     {
-        var dishes = _context.Dishes
-            .Where(d => categoryId == null || d.CategoryId == categoryId)
+        var dishesContext = _context.Dishes;
+        if (categoryId is null)
+            return Ok(dishesContext.ToList());
+        if (_context.Categories.Find(categoryId ?? 0) is null)
+            return NotFound(new ApiResponse($"Category with ID {categoryId} does not exist!"));
+
+        var dishes = dishesContext
+            .Where(d => d.CategoryId == categoryId)
             .ToList();
         return Ok(dishes);
     }
