@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using webapi.Data;
 using webapi.DTOs;
 using webapi.Models;
 
@@ -19,7 +18,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Category>> GetAll()
+    public ActionResult<List<Category>> GetAllCategories()
     {
         var categories = _context.Categories.ToList();
         return Ok(categories);

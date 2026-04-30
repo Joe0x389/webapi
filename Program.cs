@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using webapi;
-using webapi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
