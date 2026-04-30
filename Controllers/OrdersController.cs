@@ -98,14 +98,14 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("{id}/status")]
-    public ActionResult<ApiResponse> UpdateOrderStatus(int id, string newStatus)
+    public ActionResult<ApiResponse> UpdateOrderStatus(int id, [FromBody] OrderStatusUpdateDto dto)
     {
         var order = _context.Orders.Find(id);
         if (order is null)
             return NotFound(new ApiResponse("Order does not exist!"));
-        if (!Order.IsValidStatus(newStatus))
+        if (!Order.IsValidStatus(dto.NewStatus))
             return BadRequest(new ApiResponse("Invalid order status!"));
-        order.Status = newStatus;
+        order.Status = dto.NewStatus;
         _context.Orders.Update(order);
         _context.SaveChanges();
         return Ok(new ApiResponse("Order status updated successfully!"));

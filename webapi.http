@@ -1,5 +1,5 @@
 @webapi = http://localhost:5159
-@token = your-token-here
+@token = token_goes_here
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
@@ -13,7 +13,6 @@ Accept: application/json
 
 ### Filter dishes by category
 GET {{webapi}}/api/dishes?categoryId=2
-Accept: application/json
 
 
 ### Add a new dish (requires admin token)
@@ -26,6 +25,19 @@ Content-Type: application/json
     "Price": 100, 
     "AvailableQty": 20,
     "CategoryId": 2
+}
+
+
+### Update a dish (requires admin token)
+PUT {{webapi}}/api/dishes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "Name": "Updated Dish Name", 
+    "Price": 150, 
+    "AvailableQty": 10,
+    "CategoryId": 1
 }
 
 
@@ -53,9 +65,13 @@ Accept: application/json
 
 
 ### Set order status (requires valid token, status can only be 'Pending', 'In Progress', or 'Completed')
-POST {{webapi}}/api/orders/1?newStatus=Completed
+POST {{webapi}}/api/orders/1/status
 Authorization: Bearer {{token}}
-Accept: application/json
+Content-Type: application/json
+
+{
+    "NewStatus": "Completed"
+}
 
 
 ### Get all categories
@@ -115,7 +131,7 @@ Authorization: Bearer {{token}}
 ### Update a user (requires admin token)
 ### Cannot update user with ID 1 (admin user), but you can update other users
 ### You can just include the fields you want to update, but here we will update all fields for demonstration
-PUT {{webapi}}/api/users/1
+PUT {{webapi}}/api/users/2
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
