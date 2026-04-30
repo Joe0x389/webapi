@@ -15,7 +15,7 @@ builder.Services.AddScoped<IPaymentService, MockPaymentService>();
 
 // التعديل هنا: خليه يقرأ من الـ appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                       ?? "Data Source=resto.db"; // لو ملقتش في الإعدادات، دور عليه في الفولدر الرئيسي
+                       ?? "Data Source=./resto.db"; // لو ملقتش في الإعدادات، دور عليه في الفولدر الرئيسي
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
