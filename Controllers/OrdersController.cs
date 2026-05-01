@@ -97,7 +97,7 @@ public class OrdersController : ControllerBase
         return Ok(new { OrderId = order.Id, Status = "Order saved permanently" });
     }
 
-    [HttpPost("{id}/status")]
+    [HttpPut("{id}/status")]
     public ActionResult<ApiResponse> UpdateOrderStatus(int id, [FromBody] OrderStatusUpdateDto dto)
     {
         var order = _context.Orders.Find(id);
