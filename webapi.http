@@ -1,9 +1,5 @@
 @webapi = http://localhost:5159
-<<<<<<< HEAD
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc1NzgyMjksImV4cCI6MTc3NzY2NDYyOSwiaWF0IjoxNzc3NTc4MjI5fQ.NdEb9cfgmc5hmv4WnqyWafcvzqda3zpnIBuzGVzI9GA
-=======
 @token = token_goes_here
->>>>>>> 25614d1148b2e5d088363df74b7899753f3f8b21
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
@@ -68,12 +64,6 @@ GET {{webapi}}/api/orders/1
 Authorization: Bearer {{token}}
 Accept: application/json
 
-<<<<<<< HEAD
-POST {{webapi}}/api/orders/1?newStatus=Completed
-Authorization: Bearer {{token}}
-Accept: application/json
-###
-=======
 
 ### Set order status (requires valid token, status can only be 'Pending', 'In Progress', or 'Completed')
 PUT {{webapi}}/api/orders/1/status
@@ -86,7 +76,6 @@ Content-Type: application/json
 
 
 ### Get all categories
->>>>>>> 25614d1148b2e5d088363df74b7899753f3f8b21
 GET {{webapi}}/api/categories
 Accept: application/json
 
