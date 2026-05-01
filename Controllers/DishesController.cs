@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using webapi.DTOs;
 using webapi.Models;
 
@@ -69,7 +68,8 @@ public class DishesController : ControllerBase
             Name = dto.Name,
             Price = dto.Price,
             AvailableQty = dto.AvailableQty,
-            CategoryId = catId
+            CategoryId = catId,
+            ImageUrl = dto.ImageUrl
         };
 
         _context.Dishes.Add(dish); // بيضيف للجدول
@@ -102,10 +102,13 @@ public class DishesController : ControllerBase
         if (catId != null && category == null)
             return BadRequest(new ApiResponse($"Category ID {catId} does not exist!"));
 
+        var imageUrl = dto.ImageUrl;
+
         if (name is not null) dish.Name = name;
         if (qty is not null) dish.AvailableQty = qty.Value;
         if (price is not null) dish.Price = price.Value;
         if (catId is not null) dish.Category = category;
+        if (imageUrl is not null) dish.ImageUrl = imageUrl;
 
         _context.SaveChanges();
         return Ok(new ApiResponse("Dish updated successfully!"));

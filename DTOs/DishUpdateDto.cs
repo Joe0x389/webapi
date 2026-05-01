@@ -1,6 +1,4 @@
-﻿using webapi.Models;
-
-namespace webapi.DTOs;
+﻿namespace webapi.DTOs;
 
 public record DishUpdateDto
 (
