@@ -1,5 +1,3 @@
-using System.Net.NetworkInformation;
-
 namespace webapi.Models;
 
 public class Order
