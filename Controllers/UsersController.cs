@@ -65,7 +65,7 @@ public class UsersController : ControllerBase
             user.PasswordHash = hasher.HashPassword(user, updateInfo.Password);
         }
         if (!string.IsNullOrWhiteSpace(updateInfo.Role)
-            && updateInfo.Role is "Admin" or "Cashier")
+            && Models.User.IsValidRole(updateInfo.Role))
             user.Role = updateInfo.Role;
         _context.Users.Update(user);
         _context.SaveChanges();

@@ -46,6 +46,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("checkout")]
+    [Authorize(Roles = "Admin,Cashier")]
     public async Task<IActionResult> Checkout([FromBody] OrderDto dto)
     {
         if (dto.Items is null || dto.Items.Count == 0)
@@ -98,6 +99,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPut("{id}/status")]
+    [Authorize(Roles = "Admin,Chef")]
     public ActionResult<ApiResponse> UpdateOrderStatus(int id, [FromBody] OrderStatusUpdateDto dto)
     {
         var order = _context.Orders.Find(id);
