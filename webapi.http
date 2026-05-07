@@ -96,8 +96,8 @@ Authorization: Bearer {{token}}
 ### Update a category (requires admin token)
 PUT {{webapi}}/api/categories/2
 Authorization: Bearer {{token}}
-
 Content-Type: application/json
+
 {
     "Active": true
 }
