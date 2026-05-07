@@ -1,5 +1,5 @@
 @webapi = http://localhost:5159
-@token = token_goes_here
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3Nzc4NDU1MjksImV4cCI6MTc3NzkzMTkyOSwiaWF0IjoxNzc3ODQ1NTI5fQ.x9d_-zNZSEn9cvopA1PqmYsbOMOOyXRb1OvDXPEpns0
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
@@ -22,8 +22,7 @@ Content-Type: application/json
 
 {
     "Name": "chicken ranch Pizza", 
-    "Price": 100, 
-    "AvailableQty": 20,
+    "Price": 100,
     "CategoryId": 2
 }
 
@@ -35,10 +34,22 @@ Content-Type: application/json
 
 {
     "Name": "Updated Dish Name", 
-    "Price": 150, 
-    "AvailableQty": 10,
+    "Price": 150,
     "CategoryId": 1
 }
+
+
+### Upload an image for a specific dish
+POST {{webapi}}/api/dishes/1/upload-image
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="dish.png"
+Content-Type: image/png
+
+< C:/Users/Youssef/Desktop/7klcfb.jpg
+--boundary--
 
 
 ### Checkout an order (requires valid token)

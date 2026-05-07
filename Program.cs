@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using webapi;
@@ -10,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IPaymentService, MockPaymentService>();
 
 // التعديل هنا: خليه يقرأ من الـ appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
@@ -64,6 +61,8 @@ app.UseSwaggerUI();
 app.UseCors("AllowAll");
 // امسح الـ HttpsRedirection لو لسه فيه مشاكل في الـ SSL على الاستضافة المجانية
 // app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthentication(); // Who are you?
 app.UseAuthorization();  // What are you allowed to do?
