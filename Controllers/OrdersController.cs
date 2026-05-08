@@ -42,7 +42,7 @@ public class OrdersController : ControllerBase
 
     [HttpPost("checkout")]
     [Authorize(Roles = "Admin,Cashier")]
-    public async Task<IActionResult> Checkout([FromBody] OrderDto dto)
+    public IActionResult Checkout([FromBody] OrderDto dto)
     {
         if (dto.Items is null || dto.Items.Count == 0)
             return BadRequest(new ApiResponse("Order must contain at least one item."));

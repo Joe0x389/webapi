@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return Ok(new { Token = tokenHandler.WriteToken(token) });
+        return Ok(new LoginResponseDto(tokenHandler.WriteToken(token), user));
     }
 
     [HttpPost("register")]
