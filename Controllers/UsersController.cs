@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
     [HttpGet]
     public ActionResult<ArrayHolder<User>> GetAllUsers()
     {
-        var users = _context.Users.ToList();
+        var users = _context.Users;
         return Ok(ArrayHolder.Create(users));
     }
 
