@@ -7,7 +7,7 @@ public class Dish
     public int Id { get; init; }
     public required string Name { get; set; }
     public required decimal Price { get; set; }
-    public string ImageUrl { get; set; } = string.Empty;
     public required int CategoryId { get; set; }
+    public bool Active { get; set; } = true;
     [JsonIgnore] public Category? Category;
 }

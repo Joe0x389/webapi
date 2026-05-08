@@ -1,5 +1,5 @@
 @webapi = http://localhost:5159
-@token = token_goes_here
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluVXNlciIsInJvbGUiOiJBZG1pbiIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3NzgxODAwNzAsImV4cCI6MTc3ODI2NjQ3MCwiaWF0IjoxNzc4MTgwMDcwfQ.vjF1LmMNIM35orwSFziy5Kh4sMewICRuP95ytTMoVVw
 
 ### Get all dishes
 GET {{webapi}}/api/dishes
@@ -22,8 +22,7 @@ Content-Type: application/json
 
 {
     "Name": "chicken ranch Pizza", 
-    "Price": 100, 
-    "AvailableQty": 20,
+    "Price": 100,
     "CategoryId": 2
 }
 
@@ -35,8 +34,7 @@ Content-Type: application/json
 
 {
     "Name": "Updated Dish Name", 
-    "Price": 150, 
-    "AvailableQty": 10,
+    "Price": 150,
     "CategoryId": 1
 }
 
@@ -75,6 +73,11 @@ Content-Type: application/json
 }
 
 
+### Delete an order by ID (requires valid token)
+DELETE {{webapi}}/api/orders/1
+Authorization: Bearer {{token}}
+
+
 ### Get all categories
 GET {{webapi}}/api/categories
 Accept: application/json
@@ -88,6 +91,16 @@ Accept: application/json
 ### Add a new category (requires admin token)
 POST {{webapi}}/api/categories/Pizza
 Authorization: Bearer {{token}}
+
+
+### Update a category (requires admin token)
+PUT {{webapi}}/api/categories/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "Active": true
+}
 
 
 ### Register a new user (requires admin token)

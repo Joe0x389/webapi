@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -13,12 +13,10 @@ namespace webapi.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
-    private readonly IPaymentService _paymentService;
 
-    public OrdersController(AppDbContext context, IPaymentService paymentService)
+    public OrdersController(AppDbContext context)
     {
         _context = context;
-        _paymentService = paymentService;
     }
 
     // اللينك هيكون: api/orders
@@ -60,8 +58,8 @@ public class OrdersController : ControllerBase
         foreach (var item in dto.Items)
         {
             var dish = _context.Dishes.Find(item.DishId);
-            if (dish is null)
-                return BadRequest(new ApiResponse($"Dish with ID {item.DishId} does not exist!"));
+            if (dish == null || !dish.Active)
+                return BadRequest(new ApiResponse($"Dish with ID {item.DishId} does not exist or is inactive!"));
             if (item.Quantity <= 0)
                 return BadRequest(new ApiResponse("Quantity must be positive!"));
             dishQuantities.Add((dish, item.Quantity));
@@ -71,11 +69,6 @@ public class OrdersController : ControllerBase
 
         foreach (var (dish, quantity) in dishQuantities)
             total += dish.Price * quantity;
-
-        var result = await _paymentService.ProcessPaymentAsync(total);
-
-        if (!result.IsSuccess)
-            return BadRequest(new ApiResponse(result.Message));
 
         var order = new Order
         {
@@ -105,5 +98,18 @@ public class OrdersController : ControllerBase
         _context.Orders.Update(order);
         _context.SaveChanges();
         return Ok(new ApiResponse("Order status updated successfully!"));
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<ApiResponse> DeleteOrder(int id)
+    {
+        var order = _context.Orders.Find(id);
+        if (order is null)
+            return NotFound(new ApiResponse("Order does not exist!"));
+        if (order.Status != "Pending")
+            return BadRequest(new ApiResponse("Only pending orders can be deleted!"));
+        _context.Orders.Remove(order);
+        _context.SaveChanges();
+        return Ok(new ApiResponse("Order deleted successfully!"));
     }
 }

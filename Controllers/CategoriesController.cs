@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.DTOs;
 using webapi.Models;
 
 namespace webapi.Controllers;
@@ -18,8 +19,8 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     public ActionResult<List<Category>> GetAllCategories()
     {
-        var categories = _context.Categories.ToList();
-        return Ok(categories);
+        var categories = _context.Categories;
+        return Ok(User.IsInRole("Admin") ? categories : categories.Where(c => c.Active));
     }
 
     [HttpGet("{id}")]
@@ -41,5 +42,31 @@ public class CategoriesController : ControllerBase
         _context.Categories.Add(category);
         _context.SaveChanges();
         return Ok(new ApiResponse("Category saved to DB!"));
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public ActionResult<ApiResponse> Update(int id, [FromBody] CategoryUpdateDto dto)
+    {
+        var category = _context.Categories.Find(id);
+        if (category is null)
+            return NotFound(new ApiResponse("Category not found!"));
+
+        if (dto.NewName is not null)
+        {
+            if (_context.Categories.Any(c => c.Name == dto.NewName && c.Id != id))
+                return BadRequest(new ApiResponse("Category with the same name already exists!"));
+            category.Name = dto.NewName;
+        }
+
+        if (dto.Active is not null)
+        {
+            category.Active = dto.Active.Value;
+            foreach (var dish in _context.Dishes.Where(d => d.CategoryId == id))
+                dish.Active = category.Active;
+        }
+
+        _context.SaveChanges();
+        return Ok(new ApiResponse("Category updated in DB!"));
     }
 }

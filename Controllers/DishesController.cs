@@ -64,8 +64,7 @@ public class DishesController : ControllerBase
         {
             Name = dto.Name,
             Price = dto.Price,
-            CategoryId = catId,
-            ImageUrl = dto.ImageUrl
+            CategoryId = catId
         };
 
         _context.Dishes.Add(dish); // بيضيف للجدول
@@ -90,16 +89,19 @@ public class DishesController : ControllerBase
             return BadRequest(new ApiResponse("Dish with the same name already exists!"));
 
         var catId = dto.CategoryId;
-        var category = _context.Categories.Find(catId);
-        if (catId != null && category == null)
-            return BadRequest(new ApiResponse($"Category ID {catId} does not exist!"));
+        if (catId is not null)
+        {
+            var category = _context.Categories.Find(catId);
+            if (category == null || !category.Active)
+                return BadRequest(new ApiResponse($"Category ID {catId} does not exist or is inactive!"));
+            dish.CategoryId = catId.Value;
+        }
 
-        var imageUrl = dto.ImageUrl;
+        var active = dto.Active;
 
+        if (active is not null) dish.Active = active.Value;
         if (name is not null) dish.Name = name;
         if (price is not null) dish.Price = price.Value;
-        if (catId is not null) dish.Category = category;
-        if (imageUrl is not null) dish.ImageUrl = imageUrl;
 
         _context.SaveChanges();
         return Ok(new ApiResponse("Dish updated successfully!"));

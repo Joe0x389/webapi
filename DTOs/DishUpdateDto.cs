@@ -4,6 +4,6 @@ public record DishUpdateDto
 (
     string? Name,
     decimal? Price,
-    string? ImageUrl,
-    int? CategoryId
+    int? CategoryId,
+    bool? Active
 );
