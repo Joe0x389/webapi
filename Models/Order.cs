@@ -11,5 +11,5 @@ public class Order
     public int UserId { get; set; }
 
     public static bool IsValidStatus(string status)
-        => status is "Pending" or "In Progress" or "Completed";
+        => status is "Pending" or "In Progress" or "Completed" or "Delivered";
 }
